@@ -30,11 +30,11 @@ button_menu.addEventListener('click', function () {
 
 async function fetchData() {
   try {
-    const response = await fetch("http://localhost:8000/projects/");
+    const response = await fetch("https://angry-pants-guess.loca.lt/projects/");//"http://localhost:8000/projects/"
     const projects = await response.json();
 
     const dynamicProjectContainer = document.getElementById("dynamic-project");
-
+    dynamicProjectContainer.innerHTML = ""; // Limpa o conteúdo
 
     if (Array.isArray(projects) && projects.length > 0) {
       projects.forEach((project) => {
