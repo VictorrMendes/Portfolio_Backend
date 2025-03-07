@@ -422,10 +422,11 @@ body {
 /* Container com Grid */
 .projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Ajustável */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Ajuste para se adaptar a diferentes tamanhos */
     gap: 20px;
     justify-content: center;
 }
+
 
 /* Cartão do Projeto */
 .project-box {

@@ -28,54 +28,52 @@ button_menu.addEventListener('click', function () {
   }
 })
 
-
-const requestOptions = {
-  method: "GET",
-  redirect: "follow"
-};
-
 async function fetchData() {
   try {
-    const response = await fetch("http://localhost:8000/projects/", requestOptions);
-    const result = await response.json();  
-    console.log(result);  
+    const response = await fetch("http://localhost:8000/projects/");
+    const projects = await response.json();
 
     const dynamicProjectContainer = document.getElementById("dynamic-project");
-    dynamicProjectContainer.innerHTML = ""; 
 
-    if (result && result.title && result.projetc_img && result.description && result.link_project) {
-      // Criando o box do projeto 
-      const projectBox = document.createElement("div");
-      projectBox.classList.add("project-box");
 
-      projectBox.innerHTML = `
-        <div class="project-inner">
-          <div class="project-front">
-            <!-- A URL da imagem é retirada diretamente da resposta da API -->
-            <img src="${result.projetc_img}" alt="${result.title}" class="project-img"/>
-            <h2 class="project-title">${result.title}</h2>
-            <span class="Ferramentas">${result.tools}</span>
-          </div>
-          <div class="project-back">
-            <h2 class="project-title">${result.title_back}</h2>
-            <h4>Descrição:</h4>
-            <p>${result.description}</p>
-            <span class="Ferramentas">${result.tools}</span>
-            <a href="${result.link_project}" target="_blank" class="link_projetc">Ver projeto</a>
-          </div>
-        </div>
-      `;
-      
-      dynamicProjectContainer.appendChild(projectBox);
+    if (Array.isArray(projects) && projects.length > 0) {
+      projects.forEach((project) => {
+        if (project.title && project.projetc_img && project.description && project.link_project) {
+          const projectBox = document.createElement("div");
+          projectBox.classList.add("project-box"); // Adiciona a classe aqui
+
+          projectBox.innerHTML = `
+            <div class="project-inner">
+              <div class="project-front">
+                <img src="${project.projetc_img}" alt="${project.title}" class="project-img"/>
+                <h2 class="project-title">${project.title}</h2>
+                <span class="Ferramentas">${project.tools}</span>
+              </div>
+              <div class="project-back">
+                <h2 class="project-title">${project.title_back}</h2>
+                <h4>Descrição:</h4>
+                <p>${project.description}</p>
+                <span class="Ferramentas">${project.tools}</span>
+                <a href="${project.link_project}" target="_blank" class="link_projetc">Ver projeto</a>
+              </div>
+            </div>
+          `;
+
+          dynamicProjectContainer.appendChild(projectBox);
+        }
+      });
     } else {
-      console.error("A resposta não contém os dados do projeto necessários.");
+      console.error("Nenhum projeto encontrado.");
     }
   } catch (error) {
-    console.error(error);
+    console.error("Erro ao buscar os projetos:", error);
   }
 }
 
 fetchData();
+
+
+
 
 
 
