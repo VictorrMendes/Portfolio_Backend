@@ -1,67 +1,71 @@
 document.getElementById('uploadForm').addEventListener('submit', function (e) {
     e.preventDefault();
 
-    const upload = document.getElementById('upload')
-    const key = document.getElementById('keyInput');  
-
+    const resetar = document.getElementById('resetar');
+    const keyInput = document.getElementById('keyInput');
     const messageSuccess = document.getElementById('messageSuccess');
+    const uploadForm = document.getElementById('uploadForm');
 
 
     const formData = new FormData();
-    formData.append('title', document.getElementById('title').value);
-    formData.append('img_upload', document.getElementById('img_upload').files[0]);
+    formData.append('title', document.getElementById('title-front').value);
+    formData.append('title_back', document.getElementById('title-back').value);
+    formData.append('projetc_img', document.getElementById('img_upload').files[0]);
     formData.append('tools', document.getElementById('Tools').value);
     formData.append('description', document.getElementById('Description').value);
     formData.append('link_project', document.getElementById('Link_project').value);
-    formData.append('key', key.value);  
 
-
-    // fetch('/upload/', {
-    //     method: 'POST',
-    //     body: formData,
-    //     headers: {
-    //         'X-CSRFToken': getCookie('csrftoken')
-    //     }
-    // })
-    //     .then(response => response.json())
-    //     .then(data => {
-        if (key.value === "123") {
-        alert('Projeto enviado com sucesso!');
-        messageSuccess.innerHTML = "";  // Limpa a mensagem de sucesso anterior
-
-        const projectBox = document.createElement("div");
-        projectBox.classList.add("project-box");
-
-
-        const imageURL = URL.createObjectURL(formData.get('img_upload'));
-
-        projectBox.innerHTML = `
-        <div class="project-inner">
-            <div class="project-front">
-                <img src="${imageURL}" alt="${formData.get('title')}" class="project-img"/>
-                <h2 class="project-title">${formData.get('title')}</h2>
-                <span class="Ferramentas">${formData.get('tools')}</span>
-            </div>
-            <div class="project-back">
-                <h2 class="project-title">${formData.get('title')}</h2>
-                <h4>Descrição:</h4>
-                <p>${formData.get('description')}</p>
-                <span class="Ferramentas">${formData.get('tools')}</span>
-                <a href="${formData.get('link_project')}" target="_blank" class="link_projetc">Ver projeto</a>
-            </div>
-        </div>`;
-
-        messageSuccess.appendChild(projectBox);
-
-        document.getElementById('uploadForm').reset();
-    }else{
-        alert('Erro ao enviar o projeto!');
-        console.error('Erro:', error);
+    async function fetchSenha() {
+        try {
+            const response = await fetch("http://localhost:3000/senha/");
+            const data = await response.json();
+            return data.senha;
+        } catch (error) {
+            console.error("Erro ao buscar a senha:", error);
+            alert("Erro ao buscar a senha. Verifique a conexão.");
+            return null;
+        }
     }
+
+    async function validarSenha() {
+        const senhaDigitada = keyInput.value;
+        const senhaCorreta = await fetchSenha();
+
+        if (!senhaCorreta) {
+            return; 
+        }
+
+        if (senhaDigitada === senhaCorreta) {
+            try {
+                const response = await fetch("http://localhost:3000/projects/", {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (response.ok) {
+                    alert('Projeto enviado com sucesso!');
+                    uploadForm.reset();
+                    
+
+                } else {
+                    console.error("Erro ao enviar o projeto:", response.status, await response.json());
+                    alert("Erro ao enviar o projeto. Verifique os dados e tente novamente.");
+                }
+
+            } catch (error) {
+                console.error("Erro ao enviar o projeto:", error);
+                alert("Erro de conexão ao enviar o projeto.");
+            }
+
+        } else {
+            alert("Senha incorreta!");
+        }
+    }
+
+    validarSenha();
+
+    resetar.addEventListener('click', function () {
+        messageSuccess.innerHTML = "";
+    });
+
 });
-// 
-//     .catch(error => {
-//         console.error('Erro:', error);
-//         alert('Erro ao enviar o projeto!');
-//     });
-// });

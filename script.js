@@ -30,17 +30,17 @@ button_menu.addEventListener('click', function () {
 
 async function fetchData() {
   try {
-    const response = await fetch("https://angry-pants-guess.loca.lt/projects/");//"http://localhost:8000/projects/"
+    const response = await fetch("http://localhost:3000/projects/");//"http://localhost:8000/projects/""https://puny-spiders-walk.loca.lt/projects/"
     const projects = await response.json();
 
     const dynamicProjectContainer = document.getElementById("dynamic-project");
-    dynamicProjectContainer.innerHTML = ""; // Limpa o conteúdo
+    dynamicProjectContainer.innerHTML = ""; 
 
     if (Array.isArray(projects) && projects.length > 0) {
       projects.forEach((project) => {
         if (project.title && project.projetc_img && project.description && project.link_project) {
           const projectBox = document.createElement("div");
-          projectBox.classList.add("project-box"); // Adiciona a classe aqui
+          projectBox.classList.add("project-box"); 
 
           projectBox.innerHTML = `
             <div class="project-inner">
@@ -71,40 +71,6 @@ async function fetchData() {
 }
 
 fetchData();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -235,7 +201,7 @@ particlesJS("particles-js", {
 
 var count_particles, stats, update;
 
-stats = new Stats();
+stats = new stats();
 stats.setMode(0);
 stats.domElement.style.position = 'absolute';
 stats.domElement.style.left = '0px';
